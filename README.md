@@ -26,6 +26,7 @@ Totally unbiased recommendation, of course :whistle:
 
 ## Usage
 ```js
+fastify.register(import('@fastify/cookie'), { ... })
 fastify.register(import('@fastify/session'), { ... })
 fastify.register(import('fastify-opaque-apake'), { ... })
 ```
@@ -36,13 +37,20 @@ use it as more convenient methods are added to the `FastifyRequest` object.
 These methods will handle temporary state holding for you (by forwarding the work to `@fastify/session`, itself capable
 of dealing with scaled environments by using a Redis-backed store for example).
 
+The examples below are absolutely NOT production ready. They show off the API of the plugin, but lack error handling.
+Every call to `*Opaque*` should be wrapped in a `try/catch` block, body should be validated (at least make sure it's
+an array of numbers, the rest will be handled by the lib)!
+
 ```js
 fastify.post('/auth/register/init', (request, reply) => {
-	return { response: request.startOpaqueRegistration(request.body.username, request.body.request) }
+	const reqBytes = new Uint8Array(request.body.request)
+	const resBytes = request.startOpaqueRegistration(request.body.username, reqBytes)
+	return { response: Array.from(resBytes) }
 })
 
 fastify.post('/auth/register/finalize', (request, reply) => {
-	const credentials = request.finishOpaqueRegistration(request.body.record)
+	const recordBytes = new Uint8Array(request.body.record)
+	const credentials = request.finishOpaqueRegistration()
 	// store credentials to database
 
 	reply.code(204).send()
@@ -63,11 +71,14 @@ fastify.post('/auth/login/init', (request, reply) => {
 	// enumeration during authentication is not a concern for you,
 	// you may skip this and simply send a clear error right now to
 	// the client.
-	return { response: request.startOpaqueLogin(request.body.username, request.body.request, record) }
+	const reqBytes = new Uint8Array(request.body.request)
+	const resBytes = request.startOpaqueLogin(request.body.username, reqBytes, record)
+	return { response: Array.from(resBytes) }
 })
 
 fastify.post('/auth/login/finalize', (request, reply) => {
-	const sessionKey = request.finishOpaqueLogin(request.body.finish)
+	const finishBytes = new Uint8Array(request.body.finish)
+	const sessionKey = request.finishOpaqueLogin(finishBytes)
 	reply.code(204).send()
 })
 ```
