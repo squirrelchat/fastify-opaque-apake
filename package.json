@@ -1,0 +1,49 @@
+{
+	"name": "fastify-opaque-apake",
+	"version": "0.1.0",
+	"description": "Fastify plugin to implement the OPAQUE aPAKE protocol",
+	"repository": "git@github.com:squirrelchat/fastify-opaque-apake.git",
+	"author": "Cynthia <cyyynthia@borkenware.com>",
+	"license": "BSD-3-Clause",
+	"type": "module",
+	"engines": {
+		"node": ">= 18",
+		"pnpm": ">= 7.24"
+	},
+	"scripts": {
+		"prepublishOnly": "pnpm run build",
+		"build": "tsc",
+		"test": "cross-env NODE_OPTIONS=\"--experimental-wasm-modules\" vitest"
+	},
+	"dependencies": {
+		"@squirrelchat/opaque-wasm-server": "^0.1.2",
+		"fastify-plugin": "^4.5.0"
+	},
+	"peerDependencies": {
+		"fastify": ">= 4.0.0"
+	},
+	"devDependencies": {
+		"@fastify/cookie": "^8.3.0",
+		"@fastify/session": "^10.2.1",
+		"@squirrelchat/opaque-wasm-client": "^0.1.2",
+		"@tsconfig/esm": "^1.0.3",
+		"@tsconfig/node-lts": "^18.12.1",
+		"@tsconfig/strictest": "^2.0.1",
+		"@types/node": "^18.16.1",
+		"cross-env": "^7.0.3",
+		"fastify": "^4.16.3",
+		"typescript": "^5.0.4",
+		"vitest": "^0.30.1"
+	},
+	"exports": {
+		".": {
+			"default": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"files": [
+		"README.md",
+		"LICENSE",
+		"dist"
+	]
+}
