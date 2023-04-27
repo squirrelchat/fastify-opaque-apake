@@ -1,6 +1,6 @@
 {
 	"name": "fastify-opaque-apake",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Fastify plugin to implement the OPAQUE aPAKE protocol",
 	"repository": "git@github.com:squirrelchat/fastify-opaque-apake.git",
 	"author": "Cynthia <cyyynthia@borkenware.com>",
@@ -39,6 +39,10 @@
 		".": {
 			"default": "./dist/index.js",
 			"types": "./dist/index.d.ts"
+		},
+		"./core": {
+			"default": "./dist/core.js",
+			"types": "./dist/core.d.ts"
 		}
 	},
 	"files": [

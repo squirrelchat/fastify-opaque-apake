@@ -42,6 +42,7 @@ import fastify, { type FastifyInstance } from 'fastify'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
 import fastifyOpaqueApake from './index.js'
+import fastifyOpaqueApakeCore from './core.js'
 
 let app: FastifyInstance
 
@@ -97,6 +98,14 @@ describe('registration', () => {
 
 		await app.close()
 		expect((app.opaque as any).ptr).toBe(0)
+	})
+
+	it('registers normally with just the core plugin', async () => {
+		expect.assertions(0)
+
+		app = fastify().register(fastifyOpaqueApakeCore, { state: void 0 })
+
+		await app.ready()
 	})
 })
 
@@ -200,7 +209,7 @@ describe('protocol execution', () => {
 
 		app.post('/login/init', async (request) => {
 			const body = request.body as any
-			const response = await request.startOpaqueLogin(body.identifier, body.request, TEST_CREDENTIALS)
+			const response = request.startOpaqueLogin(body.identifier, body.request, TEST_CREDENTIALS)
 			return { response: Array.from(response) }
 		})
 

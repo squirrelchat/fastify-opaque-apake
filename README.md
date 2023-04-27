@@ -7,6 +7,7 @@ under the hood, itself using [opaque-ke](https://github.com/facebook/opaque-ke) 
 
 This plugins depends on [`@fastify/session`](https://npm.im/@fastify/session) (or any compatible plugin such
 as [`@fastify/secure-session`](https://npm.im/@fastify/secure-session)) to handle state memoization during login.
+However, if you wish you can use it [witout a session plugin](#usage-without-a-session-plugin).
 
 The underlying library uses the following OPAQUE configuration, based on the recommendations of the OPAQUE draft:
 - OPRF: ristretto255-SHA512
@@ -111,3 +112,14 @@ sensitive, and storing them to a file isn't the best for security.
 ```js
 fastify.register(import('fastify-opaque-apake'), { stateFile: './opaque.bin' })
 ```
+
+### Usage without a session plugin
+In case you need to handle the OPAQUE state in a specific way, and don't want to register a session plugin for this
+reason, you can use `fastify-opaque-apake/core`.
+
+```js
+fastify.register(import('fastify-opaque-apake/core'), { ... })
+```
+
+When registered like this, you only get the `fastify.opaque` decorator. The helpers on `FastifyRequest` are not
+registered, and you must handle the state management by yourself during login.
